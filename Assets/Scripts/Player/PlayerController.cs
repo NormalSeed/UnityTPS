@@ -38,7 +38,21 @@ public class NewBehaviourScript : MonoBehaviour
 
     private void HandleMovement()
     {
+        // (회전 수행 후)좌우 회전에 대한 벡터 반환
+        Vector3 camRotateDir = _movement.SetAimRotation();
 
+        float moveSpeed;
+        if (_status.IsAiming.Value) moveSpeed = _status.WalkSpeed;
+        else moveSpeed = _status.RunSpeed;
+
+        Vector3 moveDir = _movement.SetMove(moveSpeed);
+        _status.IsMoving.Value = (moveDir != Vector3.zero);
+
+        Vector3 avatarDir;
+        if (_status.IsAiming.Value) avatarDir = camRotateDir;
+        else avatarDir = moveDir;
+
+        _movement.SetAvatarRotation(avatarDir);
     }
 
     private void HandleAiming()
