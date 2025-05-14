@@ -66,8 +66,16 @@ public class PlayerMovement : MonoBehaviour
         return rotateDirVector.normalized;
     }
 
-    public void SetBodyRotation()
+    public void SetAvatarRotation(Vector3 direction)
     {
+        if (direction == Vector3.zero) return;
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+
+        _avatar.rotation = Quaternion.Lerp(
+            _avatar.rotation,
+            targetRotation,
+            _playerStatus.RotateSpeed * Time.deltaTime);
     }
 
     private Vector2 GetMouseDirection()

@@ -4,12 +4,21 @@ using UnityEngine;
 
 namespace LKH_Test
 {
+    /// <summary>
+    /// Movement 테스트용으로 구현한 클래스입니다.
+    /// </summary>
     public class PlayerController : MonoBehaviour
     {
         public PlayerMovement _movement;
         public PlayerStatus _status;
 
-        private void Update() => MoveTest();
+        private void Update()
+        {
+            MoveTest();
+
+            // IsAiming 변경용 테스트 코드
+            _status.IsAiming.Value = Input.GetKey(KeyCode.Mouse1);
+        }
 
         public void MoveTest()
         {
@@ -22,6 +31,12 @@ namespace LKH_Test
 
             Vector3 moveDir = _movement.SetMove(moveSpeed);
             _status.IsMoving.Value = (moveDir != Vector3.zero);
+
+            Vector3 avatarDir;
+            if (_status.IsAiming.Value) avatarDir = camRotateDir;
+            else avatarDir = moveDir;
+
+            _movement.SetAvatarRotation(avatarDir);
         }
     }
 }
