@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -13,13 +11,13 @@ namespace DesignPattern
             get => _value;
             set
             {
-                if (value.Equals(value)) return;
+                if (_value.Equals(value)) return;
                 _value = value;
                 Notify();
             }
         }
 
-        private UnityEvent<T> onValueChanged = new();
+        private UnityEvent<T> _onValueChanged = new();
 
         public ObservableProperty(T value = default)
         {
@@ -28,22 +26,22 @@ namespace DesignPattern
 
         public void Subscribe(UnityAction<T> action)
         {
-            onValueChanged.AddListener(action);
+            _onValueChanged.AddListener(action);
         }
 
         public void Unsubscribe(UnityAction<T> action)
         {
-            onValueChanged.RemoveListener(action);
+            _onValueChanged.RemoveListener(action);
         }
 
         public void UnsubscribeAll()
         {
-            onValueChanged.RemoveAllListeners();
+            _onValueChanged.RemoveAllListeners();
         }
 
         private void Notify()
         {
-            onValueChanged?.Invoke(Value);
+            _onValueChanged?.Invoke(Value);
         }
     }
 }
