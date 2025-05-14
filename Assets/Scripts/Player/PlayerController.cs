@@ -1,36 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
-public class NewBehaviourScript : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
-    public bool IsControllActive { get; set; } = true;
+    public bool IsControllActivate { get; set; } = true;
 
     private PlayerStatus _status;
     private PlayerMovement _movement;
-    [SerializeField] private GameObject _aimCamera;
-    private GameObject _mainCamera;
+
+    [SerializeField] private CinemachineVirtualCamera _aimCamera;
 
     [SerializeField] private KeyCode _aimKey = KeyCode.Mouse1;
 
     private void Awake() => Init();
-
     private void OnEnable() => SubscribeEvents();
-
     private void Update() => HandlePlayerControll();
-
     private void OnDisable() => UnsubscribeEvents();
     private void Init()
     {
         _status = GetComponent<PlayerStatus>();
         _movement = GetComponent<PlayerMovement>();
-        _mainCamera = Camera.main.gameObject;
-
     }
 
     private void HandlePlayerControll()
     {
-        if (!IsControllActive) return;
+        if (!IsControllActivate) return;
 
         HandleMovement();
         HandleAiming();
@@ -38,7 +34,6 @@ public class NewBehaviourScript : MonoBehaviour
 
     private void HandleMovement()
     {
-        // (회전 수행 후)좌우 회전에 대한 벡터 반환
         Vector3 camRotateDir = _movement.SetAimRotation();
 
         float moveSpeed;
@@ -62,17 +57,11 @@ public class NewBehaviourScript : MonoBehaviour
     
     public void SubscribeEvents()
     {
-        _status.IsAiming.Subscribe(value => SetActivateAimCamera(value));
+        _status.IsAiming.Subscribe(_aimCamera.gameObject.SetActive);
     }
 
     public void UnsubscribeEvents()
     {
-        _status.IsAiming.Unsubscribe(value => SetActivateAimCamera(value));
-    }
-
-    private void SetActivateAimCamera(bool value)
-    {
-        _aimCamera.SetActive(value);
-        _mainCamera.SetActive(!value);
+        _status.IsAiming.Unsubscribe(_aimCamera.gameObject.SetActive);
     }
 }

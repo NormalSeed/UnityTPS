@@ -86,7 +86,6 @@ public class PlayerMovement : MonoBehaviour
         return new Vector2(mouseX, mouseY);
     }
 
-    // 벡터 그림 (수업 후)
     public Vector3 GetMoveDirection()
     {
         Vector3 input = GetInputDirection();
