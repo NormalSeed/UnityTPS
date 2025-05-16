@@ -14,6 +14,13 @@ public class PlayerStatus : MonoBehaviour
     [field: SerializeField][field: Range(0, 10)]
     public float RotateSpeed { get; set; }
 
+    [field: SerializeField][field: Range(0, 500)]
+    public int MaxHP { get; set; }
+
+    // Player Status Event ----
+    public ObservableProperty<int> CurrentHp { get; private set; } = new();
+
+    // Player State Event ----
     public ObservableProperty<bool> IsAiming { get; private set; } = new();
     public ObservableProperty<bool> IsMoving { get; private set; } = new();
     public ObservableProperty<bool> IsAttacking { get; private set; } = new();

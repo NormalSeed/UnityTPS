@@ -39,11 +39,10 @@ public class Gun : MonoBehaviour
 
         // TODO: Ray 발사 -> 반환받은 대상에게 데미지 부여. 몬스터 구현 시 같이 구현
 
-        GameObject target = RayShoot();
+        IDamagable target = RayShoot();
         if (target == null) return true;
 
-        Debug.Log($"총에 맞음 : {target.name}");
-        // ------
+        target.TakeDamage(_shootDamage);
 
         return true;
     }
@@ -56,14 +55,15 @@ public class Gun : MonoBehaviour
         _currentCount -= Time.deltaTime;
     }
 
-    private GameObject RayShoot()
+    private IDamagable RayShoot()
     {
         Ray ray = new Ray(_camera.transform.position, _camera.transform.forward);
         RaycastHit hit;
+
         if (Physics.Raycast(ray, out hit, _attackRange, _targetLayer))
         {
-            // TODO: 몬스터를 어떻게 구현하느냐에 따라 다름
-            return hit.transform.gameObject;
+            hit.transform.GetComponent<IDamagable>()?.TakeDamage(_shootDamage);
+            return hit.transform.GetComponent<IDamagable>();
         }
         return null;
     }
